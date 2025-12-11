@@ -61,7 +61,7 @@ body {
   );
   --card-bg-color: radial-gradient(
     50% 31% at 50% 0%,
-    rgb(231, 179, 8) 0%,
+    rgb(252, 120, 12) 0%,
     /* rgb(0, 153, 255) 0%, */ rgb(17, 17, 17) 100%
   );
   --image-border-color: radial-gradient(
@@ -111,9 +111,9 @@ body {
 
   --color-text-primary: #f57309; /* <p> */
   /* --color-text-primary: #9ca3af; <p> */
-  --color-text-secondary: #f4f4f6; /* <h3> */
+  --color-text-secondary: #9ca3af; /* <h3> */
   --color-text-black: #000; /* <h2> */
-  --color-text-white: #fff; /* <h1> */
+  --color-text-white: #ffff; /* <h1> */
 }
 
 /* === Shadows === */
