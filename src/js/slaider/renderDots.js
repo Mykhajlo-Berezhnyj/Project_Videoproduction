@@ -1,20 +1,27 @@
 export function renderDots(currentPage, totalPages) {
-  const container = document.getElementById('portfolio-dots');
-  container.innerHTML = '';
+  const pagination = document.getElementById("pagination");
+
+  if (totalPages === 1) {
+    pagination.style.display = "none";
+    return;
+  }
+
+  const container = document.getElementById("portfolio-dots");
+  container.innerHTML = "";
 
   const createDot = (page) => {
-    const btn = document.createElement('button');
+    const btn = document.createElement("button");
     btn.textContent = page;
     btn.className =
-      page === currentPage ? 'dot active formular-link' : 'formular-link dot';
+      page === currentPage ? "dot active formular-link" : "formular-link dot";
     btn.dataset.page = page;
     container.appendChild(btn);
   };
 
   const createSeparator = () => {
-    const dots = document.createElement('span');
-    dots.textContent = '...';
-    dots.className = 'dots-separator';
+    const dots = document.createElement("span");
+    dots.textContent = "...";
+    dots.className = "dots-separator";
     container.appendChild(dots);
   };
 
@@ -62,9 +69,9 @@ export function renderDots(currentPage, totalPages) {
   addRange(1, 3);
 
   if (currentPage > 5) {
-    const dots = document.createElement('span');
-    dots.textContent = '...';
-    dots.className = 'dots-separator';
+    const dots = document.createElement("span");
+    dots.textContent = "...";
+    dots.className = "dots-separator";
     container.appendChild(dots);
   }
 
@@ -73,9 +80,9 @@ export function renderDots(currentPage, totalPages) {
   addRange(startMiddle, endMiddle);
 
   if (currentPage < totalPages - 4) {
-    const dots = document.createElement('span');
-    dots.textContent = '...';
-    dots.className = 'dots-separator';
+    const dots = document.createElement("span");
+    dots.textContent = "...";
+    dots.className = "dots-separator";
     container.appendChild(dots);
   }
 
