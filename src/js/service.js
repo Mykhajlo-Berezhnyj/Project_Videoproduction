@@ -1,17 +1,10 @@
+import isValidList from "./utils/isValidList.js";
+
 export const baseUrl = "https://videoproduction.onrender.com";
 export const BASE_URL = `${baseUrl}/api`;
 
-export async function getApi(endpoint, baseList, options = {}) {
+export async function getApiList(endpoint, options = {}) {
   const url = `${BASE_URL}${endpoint}`;
-
-  let pagination = {
-    current_page: 1,
-    total_pages: 1,
-    next_page: null,
-    prev_page: null,
-    has_next: false,
-    has_previous: false,
-  };
 
   const defaultOptions = {
     headers: {
@@ -23,25 +16,14 @@ export async function getApi(endpoint, baseList, options = {}) {
   try {
     const response = await fetch(url, defaultOptions);
     const res = await response.json();
-    const lengthBackend = res.list.length;
-    if (res.status === 200 && lengthBackend > 0) {
-      if (res.pagination)
-        pagination = {
-          current_page: res.pagination.page,
-          total_pages: res.pagination.total_pages,
-          next_page: res.pagination.next_page,
-          prev_page: res.pagination.prev_page,
-          has_next: res.pagination.has_next,
-          has_previous: res.pagination.has_previous,
-        };
-      return { list: res.list, pagination };
-    } else if (lengthBackend === 0) {
-      return { list: baseList, pagination, lengthBackend };
+    if (res.status === 200 && isValidList(res.list) && res.list.length > 0 ) {
+    
+      return res.list;
     } else {
-      return { list: baseList, pagination };
+      return null;
     }
   } catch (error) {
     console.log("🚀 ~ getApi ~ error:", error);
-    return { list: baseList, pagination };
+    return null;
   }
 }

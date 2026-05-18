@@ -1,8 +1,10 @@
-export function renderVideos(videos, lengthBackend) {
+export function renderVideos(videos, example =false) {
   const videoList = document.getElementById("videos");
+   const prevBtn = document.getElementById("portfolio-prev-btn");
+          const nextBtn = document.getElementById("portfolio-next-btn");
   videoList.innerHTML = "";
 
-  if (videos.length === 0 || lengthBackend === 0) {
+  if (!videos || videos?.length === 0 ) {
     const container = document.querySelector(".gallery-dropdown-container");
     const emptyMessage = document.createElement("li");
     emptyMessage.className = "video-empty";
@@ -12,14 +14,19 @@ export function renderVideos(videos, lengthBackend) {
 
     setTimeout(() => {
       emptyMessage.remove();
-    }, 2000);
+    }, 3000);
+    return;
   }
+   
+          
 
-  if (!lengthBackend) {
-    videoList.style.flexWrap = "wrap";
-  } else {
-    videoList.style.flexWrap = "nowrap";
-  }
+//   if (example) {
+//     videoList.style.flexWrap = "wrap";
+//     prevBtn.style.visibility = "hidden";
+//  nextBtn.style.visibility = "hidden";
+//   } else {
+//     videoList.style.flexWrap = "nowrap";
+//   }
 
   videos.map((video) => {
     const videoContainer = document.createElement("li");
@@ -34,6 +41,8 @@ export function renderVideos(videos, lengthBackend) {
 
     const img = document.createElement("img");
     img.className = "img-placeholder";
+    img.alt = "video?name"
+    img.referrerPolicy = 'no-referrer';
     img.src = video.preview
       ? video.preview
       : "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='480' height='270'><rect width='100%' height='100%' fill='%23222222'/></svg>";
@@ -48,9 +57,16 @@ export function renderVideos(videos, lengthBackend) {
     btnPlay.textContent = "▶";
     placeholder.appendChild(btnPlay);
 
-    const videoUrl = video.url.includes("youtube")
-      ? `${video.url}&autoplay=1`
-      : `${video.url}`;
+    const separator = video.url.includes("?") ? "&" : "?";
+
+const videoUrl = video.url.includes("youtube") ||
+                 video.url.includes("drive.google.com")
+  ? `${video.url}${separator}autoplay=1`
+  : video.url;
+
+    // const videoUrl = video.url.includes("youtube")
+    //   ? `${video.url}&autoplay=1`
+    //   : `${video.url}`;
 
     const iframe = document.createElement("iframe");
     iframe.src = videoUrl;

@@ -1,25 +1,37 @@
 import { cards } from '../../../db/problems.js';
-import loadTemplate from '../common/loadTemplate.js';
-import addMarkup from '../common/addMarkupFromTemplate.js';
 import { startObserver } from '../common/observer.js';
-import { addImgContentToCard } from './addImgContentToCards.js';
+import { problem1 } from '../../template/problems-card1-img-content.js';
+import { problem2 } from '../../template/problems-card2-img-content.js';
+import { problem3 } from '../../template/problems-card3-img-content.js';
 
-const TMP_LINKS = {
-  tmp1: 'src/template/problems-card1-img-content.hbs',
-  tmp2: 'src/template/problems-card2-img-content.hbs',
-  tmp3: 'src/template/problems-card3-img-content.hbs'
-};
+const TMP_LINKS = [
+ problem1,
+  problem2,
+  problem3
+];
 
-export async function makeProblemsSectionMarkup(containerId, tmpLink) {
+export function makeProblemsSectionMarkup(containerId) {
   const ref = document.getElementById(containerId);
-  const cardsTmp = await loadTemplate(tmpLink);
 
   if (!cards) return;
 
-  await addMarkup(ref, cardsTmp, cards);
-  startObserver('.slide-problem-item', false, 'visible', true);
+  const markup = cards.map((card, index) => {
+    const imgElement = TMP_LINKS[index] || "";
+  return `  <li class="problems-list-item slide-problem-item">
+    <article class="problem-card">
+      <h3 class="problems-card-title">${card.title}</h3>
+      <div id="problems-card-image-tmb-index" class="problems-card-image-thumb">${imgElement}</div>
+      <p class="problems-card-text">${card.description}</p>
+    </article>
+  </li>`
+  }).join("")
+  
+ const list = document.createElement('ul');
+  list.classList.add('problems-list');
+  list.innerHTML = markup; 
+  if (ref) {
+    ref.appendChild(list);
+}
 
-  const contentThumbRefs = document.querySelectorAll('#problems-card-image-tmb');
-
-  await addImgContentToCard(contentThumbRefs, Object.values(TMP_LINKS));
+  startObserver({selector: '.slide-problem-item', classToAdd: 'visible', delay: true});
 }

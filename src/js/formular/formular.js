@@ -75,10 +75,6 @@ export function initFormularModal() {
         form.reset();
         // closeModal();
 
-        console.log(
-          '🚀 ~ initFormularModal ~ ${BASE_URL}/inquiry/:',
-          `${BASE_URL}/inquiry/`
-        );
         await fetch(`${BASE_URL}/inquiry/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

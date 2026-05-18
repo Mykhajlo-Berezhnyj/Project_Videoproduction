@@ -8,7 +8,7 @@ export const initScrollToTop = () => {
 
   btnScrollUp.innerHTML = `
     <svg class="icon-scroll-to-top" >
-      <use xlink:href="./src/img/sprite.svg#select-up"></use>
+      <use xlink:href="/img/sprite.svg#select-up"></use>
     </svg>
   `;
 

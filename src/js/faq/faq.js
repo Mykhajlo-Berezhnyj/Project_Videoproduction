@@ -3,15 +3,17 @@ import { faqAccordion } from './faqAccordion.js';
 import { faqRender } from './faqRender.js';
 
 export function initFaq() {
-  startObserver(
-    '.faq-title-h2',
-    () => {
+  startObserver({
+   selector: '.faq-title-h2',
+    callback: () => {
       faqRender();
     },
-    'faq-visible'
-  );
+   classToAdd: 'faq-visible'
+  });
 
-  document
-    .querySelector('.faq-container')
-    .addEventListener('click', faqAccordion);
+ const faqContainer = document.querySelector('.faq-container');
+
+if (!faqContainer) return;
+
+faqContainer.addEventListener('click', faqAccordion);
 }

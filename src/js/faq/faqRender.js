@@ -1,23 +1,29 @@
+import { faqList } from "../../../db/faq.js";
+import { getLocalList } from "../utils/getLocalList.js";
+import isValidList from "../utils/isValidList.js";
 import { animateSpark } from "./animation.js";
-import { fetchFaq } from "./fetchFaq.js";
 
 export async function faqRender() {
   const listContainer = document.querySelector(".faq-right");
-  const { list } = await fetchFaq();
+  let { list } = getLocalList("faq");
+
+  if (!isValidList(list)) {
+    list = faqList
+  }
 
   listContainer.innerHTML = list
     .map(
       (faq) =>
         `<div class="faq-accordion">
             <div class="spark"></div>
-        <button class="faq-accordion-toggle">
+        <button class="faq-accordion-toggle" aria-label="Toggle Faq menu item">
           <h6 class="faq-accordion-title">
             ${faq.question}
           </h6>
 
           <div class="faq-icon">
             <svg class="faq-icon" width="24" height="24">
-              <use href="./src/img/sprite.svg#icon-plus"></use>
+              <use href="/img/sprite.svg#icon-plus"></use>
             </svg>
           </div>
         </button>
@@ -35,7 +41,7 @@ export async function faqRender() {
     setTimeout(() => {
       item.classList.remove("hidden");
       item.classList.add("visible");
-    }, 300 + i * 600);
+    }, 100 + i * 600);
   });
   animateSpark();
 }

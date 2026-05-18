@@ -4,6 +4,8 @@ export function renderDots(currentPage, totalPages) {
   if (totalPages === 1) {
     pagination.style.display = "none";
     return;
+  } else {
+    pagination.style.display = "grid";
   }
 
   const container = document.getElementById("portfolio-dots");

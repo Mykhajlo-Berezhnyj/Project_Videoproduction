@@ -1,4 +1,4 @@
-export function startObserver(selector, callback, classToAdd = "visible", delay=false) {
+export function startObserver({selector, callback, classToAdd = "visible", threshold=0.2,  delay=false, marginY = "0px"}) {
   const observer = new IntersectionObserver(
     (entries, obs) => {
       entries.forEach((entry, index) => {
@@ -14,7 +14,7 @@ export function startObserver(selector, callback, classToAdd = "visible", delay=
         }
       });
     },
-    { threshold: 0.2 }
+    { threshold: threshold, rootMargin: `0px 0px ${marginY} 0px`}
   );
 
   document.querySelectorAll(selector).forEach((el) => observer.observe(el));

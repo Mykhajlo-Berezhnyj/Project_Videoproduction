@@ -1,8 +1,19 @@
+.portfolio-container {
+  width: 100%;
+  padding: 0;
+
+  @media (min-width: 375px) {
+    padding: 0 7.5px;
+  }
+}
+
 .portfolio-subtitle {
   opacity: 0;
   transform: translateX(-80%);
   transition-delay: 2s;
-  transition: transform 1.2s ease, opacity 1.2s ease;
+  transition:
+    transform 1.2s ease,
+    opacity 1.2s ease;
   will-change: transform, opacity;
 }
 
@@ -11,19 +22,116 @@
   transform: translateX(0);
 }
 
-.gallery-list {
+.gallery-wrap {
+  position: relative;
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 3rem;
+  align-items: center;
+  margin: 0 auto;
+  padding-block: 16px;
+  overflow: hidden;
+  width: 100%;
+  padding-inline: clamp(0, 3vw, 100px);
+
+  @media (min-width: 375px) {
+    width: 360px;
+  }
+
+  @media (min-width: 425px) {
+    width: 380px;
+    gap: 10px;
+  }
+
+  @media (min-width: 768px) {
+    width: 694px;
+  }
+
+  @media (min-width: 1024px) {
+    width: 1008px;
+  }
+
+  @media (min-width: 1240px) {
+    width: 1116px;
+  }
 }
 
-.video-container {
+#portfolio-next-btn,
+#portfolio-prev-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  z-index: 3;
+  gap: 5px;
+
+  &:hover {
+    gap: 10px;
+  }
+
+  @media (min-width: 375px) {
+    position: static;
+  }
+
+  @media (min-width: 1240px) {
+    width: 80px;
+    height: 44px;
+    border-radius: 10px;
+  }
+}
+
+#portfolio-prev-btn {
+  left: 0;
+
+  &:hover {
+    padding-right: 5px;
+  }
+}
+
+#portfolio-next-btn {
+  right: 0;
+
+  &:hover {
+    padding-left: 5px;
+  }
+}
+
+.span-btnNav {
+  display: none;
+
+  @media (min-width: 1240px) {
+    display: inline-block;
+  }
+}
+
+.gallery-list {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 34px;
+  width: 280px;
+  height: 541px;
+
+  @media (min-width: 768px) {
+    width: 594px;
+  }
+
+  @media (min-width: 1024px) {
+    width: 908px;
+  }
+
+  @media (min-width: 1240px) {
+    gap: 48px;
+    width: 936px;
+  }
+}
+
+.gallery-list .video-container {
   position: relative;
   gap: 10px;
-  width: 100%;
   min-width: 280px;
-  max-width: 310px;
   background-color: transparent;
 }
 
@@ -56,7 +164,7 @@
   top: 0;
   left: 0;
   aspect-ratio: 9 / 16;
-  width: 100%;
+  width: 280px;
   height: 100%;
   overflow: hidden;
   border-radius: 12px;
@@ -100,7 +208,7 @@
 }
 
 .play-btn::before {
-  content: '';
+  content: "";
   position: absolute;
   width: 100%;
   height: 100%;
@@ -151,8 +259,6 @@
   justify-content: center;
   flex-wrap: wrap;
   align-items: center;
-  padding-top: 30px;
-  gap: 30px;
 }
 
 #pagination .formular-link {
@@ -160,9 +266,11 @@
   margin: 0;
 }
 
-#portfolio-next-btn,
-#portfolio-prev-btn {
-  visibility: hidden;
+#portfolio-next-btn:disabled,
+#portfolio-prev-btn:disabled {
+  background: lightgrey;
+  pointer-events: none;
+  /* visibility: hidden; */
 }
 
 #portfolio-prev-btn::before {
@@ -184,46 +292,6 @@
   }
 }
 
-#pagination {
-  display: grid;
-  gap: 16px;
-
-  grid-template-areas:
-    'prev next'
-    'dots dots';
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
-  justify-items: center;
-}
-
-#portfolio-prev-btn {
-  grid-area: prev;
-}
-#portfolio-next-btn {
-  grid-area: next;
-}
-#portfolio-dots {
-  grid-area: dots;
-}
-
-@media screen and (min-width: 620px) {
-  #pagination {
-    grid-template-areas: 'prev dots next';
-    grid-template-columns: auto auto auto;
-    grid-template-rows: auto;
-  }
-
-  #portfolio-prev-btn {
-    grid-area: prev;
-  }
-  #portfolio-next-btn {
-    grid-area: next;
-  }
-  #portfolio-dots {
-    grid-area: dots;
-  }
-}
-
 #portfolio-dots {
   display: flex;
   justify-content: center;
@@ -231,6 +299,7 @@
   padding: 8px;
   overflow: hidden;
   transition: all 0.3s ease;
+  height: 74px;
 
   @media (min-width: 768px) {
     gap: 20px;
@@ -248,7 +317,7 @@
   font-weight: var(--fw-bold);
   transform: translateY(-2px);
   scale: 1.06;
-  box-shadow: 0 0 10px var(--token-c6e98fbd-6551-4a23-b582-f27b355c7007);
+  box-shadow: 0 0 10px var(--token--orangered, #f3551b);
 }
 
 .dot.active:hover {
@@ -263,21 +332,6 @@
 
   @media (min-width: 768px) {
     width: 42px;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  #portfolio-next-btn {
-    order: 3;
-    visibility: hidden;
-  }
-
-  #portfolio-prev-btn {
-    order: 1;
-  }
-
-  #portfolio-dots {
-    order: 2;
   }
 }
 

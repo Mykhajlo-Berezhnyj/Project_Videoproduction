@@ -1,26 +1,28 @@
-import { exampleVideos } from '../../../db/videos.js';
-import { getApi } from '../service.js';
+import { exampleVideos } from "../../../db/videos.js";
+import { getApiList } from "../service.js";
+import { getLocalList } from "../utils/getLocalList.js";
+import isValidList from "../utils/isValidList.js";
+import { isValidTimestamp } from "../utils/isValidTimestamp.js";
 
-function getPerPage() {
-  if (window.matchMedia('(min-width: 320px) and (max-width: 767px)').matches) {
-    return 1;
-  } else if (
-    window.matchMedia('(min-width: 768px) and (max-width: 968px)').matches
-  ) {
-    return 2;
-  } else {
-    return 3;
-  }
-}
-export async function fetchVideo({ page = 1, perPage, category = null }) {
-  perPage = getPerPage();
-  let url = `/video/videos/?page=${page}&per_page=${perPage}`;
-  if (category !== null) {
-    url += `&category=${category}`;
-  }
 
-  const { list, pagination, lengthBackend } = await getApi(url, exampleVideos);
-  console.log('🚀 ~ fetchVideo ~ list:', list);
-  console.log('🚀 ~ fetchVideo ~ exampleVideos:', exampleVideos);
-  return { list, pagination, lengthBackend };
+export async function fetchVideo() {
+  const { list, timestamp } = getLocalList();
+  if (isValidList && isValidTimestamp(timestamp)) {
+     return list;
+  }
+  const url = "/video/videos/";
+  const listFromApi = await getApiList(url);
+  if (!listFromApi) return null;
+  const categories = [
+    ...new Map(listFromApi.map((it) => [it.category.id, it.category])).values(),
+  ];
+  localStorage.setItem(
+    "videos",
+    JSON.stringify({ list: listFromApi, timestamp: Date.now() }),
+  );
+  localStorage.setItem(
+    "categories",
+    JSON.stringify({ list: categories, timestamp: Date.now() }),
+  );
+  return listFromApi;
 }

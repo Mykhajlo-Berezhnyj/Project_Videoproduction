@@ -7,6 +7,11 @@
   margin-bottom: 80px;
 }
 
+.advantages-list {
+  overflow: hidden;
+  gap: 20px;
+}
+
 .advantages-list,
 .advantage-content-list {
   margin-top: 0;
@@ -28,11 +33,11 @@
   margin-bottom: 32px;
 }
 
-.advantages-list-item:nth-child(even) {
+.slide-item:nth-child(even) {
   align-self: flex-end;
 }
 
-.advantages-list-item:nth-child(odd) {
+.slide-item:nth-child(odd) {
   align-self: flex-start;
 }
 
@@ -85,7 +90,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  content: '';
+  content: "";
   width: 100%;
   height: 1px;
   background-image: var(--line-color);
@@ -104,13 +109,13 @@
   position: absolute;
   top: -4px;
   left: -40px;
-  content: '';
+  content: "";
   display: flex;
   justify-content: center;
   align-content: center;
   width: 32px;
   height: 32px;
-  background-image: url(../img/item.svg);
+  background-image: url(/img/item.svg);
 }
 
 .advantage-content-list-item:not(:last-child) {
@@ -141,7 +146,7 @@
   top: 0;
   left: 0;
   z-index: 5;
-  content: '';
+  content: "";
   width: inherit;
   height: inherit;
   background-image: var(--image-blur);
@@ -184,24 +189,28 @@
   position: absolute;
   top: -1px;
   right: 0;
-  content: '';
+  content: "";
   width: 24px;
   height: 24px;
-  background-image: url(../img/arrow.svg);
+  background-image: url(/img/arrow.svg);
   transition: transform 250ms linear;
 }
 
 .formular-link::before {
   position: absolute;
   top: -30px;
-  left: center;
-  content: '';
+  left: 50%;
+  content: "";
   width: 30px;
   height: 100px;
   background-image: var(--link-animation-color);
   transform: rotate(27deg);
   opacity: 0;
   animation: lightning 5s infinite ease-out;
+  overflow: hidden;
+  will-change: transform, opacity;
+  pointer-events: none;
+  contain: layout paint;
 }
 
 .formular-link:hover {
@@ -217,19 +226,27 @@
   transform: translateX(8px);
 }
 
-.slide-item {
+.from-left {
   opacity: 0;
+  scale: 0.6;
+  transform: translateX(-100%);
+}
+
+.from-right {
+  opacity: 0;
+  scale: 0.6;
+  transform: translateX(100%);
+}
+
+.slide-item {
+  opacity: 1;
+  scale: 1;
   transform: translateX(0);
-  transition: transform 0.8s ease, opacity 0.8s ease;
-  will-change: transform, opacity;
-}
-
-.slide-item.from-left {
-  transform: translateX(-100px);
-}
-
-.slide-item.from-right {
-  transform: translateX(100px);
+  will-change: transform, opacity, scale;
+  transition:
+    transform 0.5s ease,
+    scale 0.5s ease,
+    opacity 0.5s ease;
 }
 
 .advantages-list .slide-item.visible {

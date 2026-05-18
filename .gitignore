@@ -162,3 +162,6 @@ data/
 
 #mac temp files
 .DS_Store
+
+node_modules
+dist

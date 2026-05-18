@@ -20,6 +20,16 @@ export async function renderCategories() {
     fetchedCategories.every((cat, i) => cat.id === cachedCategories[i].id);
 
   if (!isListSame) cachedCategories = fetchedCategories;
+  const categoryItem = document.createElement('li');
+    categoryItem.className = 'category-item';
+    categoryItem.dataset.categoryId = "all";
+
+    const textSpan = document.createElement('span');
+    textSpan.textContent = 'Alle';
+
+    categoryItem.appendChild(textSpan);
+    categoriesList.appendChild(categoryItem);
+
 
   cachedCategories.map((category) => {
     const categoryItem = document.createElement('li');

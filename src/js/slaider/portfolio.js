@@ -1,102 +1,93 @@
-import { startObserver } from '../common/observer.js';
-import { animatePageTransition } from './animatePageTransition.js';
-import { getCategoryId } from './categoryId.js';
-import { fetchCategory } from './fetchCategory.js';
-import { fetchVideo } from './fetchVideo.js';
-import { renderVideos } from './renderVideos.js';
-import { updatePagination } from './updatePagination.js';
+import { exampleCategories } from "../../../db/categories.js";
+import { exampleVideos } from "../../../db/videos.js";
+import { startObserver } from "../common/observer.js";
+import { getLocalList } from "../utils/getLocalList.js";
+import isValidList from "../utils/isValidList.js";
+import { isValidTimestamp } from "../utils/isValidTimestamp.js";
+import { animatePageTransition } from "./animatePageTransition.js";
+import { filteredList, getCategoryId } from "./categoryId.js";
+import { fetchCategory } from "./fetchCategory.js";
+import { fetchVideo } from "./fetchVideo.js";
+import { renderVideos } from "./renderVideos.js";
+import { getPerPage, updatePagination } from "./updatePagination.js";
 
 let currentPage = 1;
 export const perPage = 3;
 
-let categories = [];
+let categories = exampleCategories;
+let videos = exampleVideos;
+let filtered = [];
+let paginated = [];
 
 export function getCategories() {
-  return categories;
+  const { list: cachedCategories } =getLocalList("categories");
+  return isValidList(cachedCategories) ? cachedCategories : categories;
+}
+
+export function rerenderVideos() {
+      const { list: cachedVideos } = getLocalList("videos");
+      if (!isValidList(cachedVideos)) {
+        renderVideos(exampleVideos);
+      } else {
+        filtered = filteredList(cachedVideos)
+        paginated = updatePagination({ page: currentPage, videos: filtered });
+         renderVideos(paginated);
+      }
 }
 
 export function initPortfolio() {
-  startObserver(
-    '.portfolio-subtitle',
-    async () => {
-      const {
-        list: videos,
-        pagination,
-        lengthBackend,
-      } = await fetchVideo({
-        page: currentPage,
-        perPage,
-        category: getCategoryId(),
-      });
-
-      renderVideos(videos, lengthBackend);
-      categories = await fetchCategory();
-      updatePagination({
-        page: pagination.current_page,
-        totalPages: pagination.total_pages,
-        hasPrev: pagination.has_previous,
-        hasNext: pagination.has_next,
-      });
+  rerenderVideos();
+  startObserver({
+    selector: ".portfolio-subtitle",
+    callback:  () => {
+      rerenderVideos();
     },
-    'subtitle-visible'
-  );
+    classToAdd: "subtitle-visible",
+  });
 
   document
-    .getElementById('portfolio-next-btn')
-    .addEventListener('click', async () => {
+    .getElementById("portfolio-next-btn")
+    .addEventListener("click", async () => {
       currentPage++;
-      const { list: videos, pagination } = await fetchVideo({
+      paginated= updatePagination({
         page: currentPage,
-        perPage,
-        category: getCategoryId(),
-      });
-      animatePageTransition(videos, 'left');
-      updatePagination({
-        page: pagination.current_page,
-        totalPages: pagination.total_pages,
-        hasPrev: pagination.has_previous,
-        hasNext: pagination.has_next,
+        videos: filtered,
+        direction: "left"
       });
     });
 
   document
-    .getElementById('portfolio-prev-btn')
-    .addEventListener('click', async () => {
+    .getElementById("portfolio-prev-btn")
+    .addEventListener("click", async () => {
       currentPage--;
-      const { list: videos, pagination } = await fetchVideo({
+      paginated= updatePagination({
         page: currentPage,
-        perPage,
-        category: getCategoryId(),
-      });
-      animatePageTransition(videos, 'left');
-      updatePagination({
-        page: pagination.current_page,
-        totalPages: pagination.total_pages,
-        hasPrev: pagination.has_previous,
-        hasNext: pagination.has_next,
+        videos: filtered,
+        direction: "right"
       });
     });
 
   document
-    .getElementById('portfolio-dots')
-    .addEventListener('click', async (e) => {
-      if (e.target.classList.contains('dot')) {
+    .getElementById("portfolio-dots")
+    .addEventListener("click", async (e) => {
+      if (e.target.classList.contains("dot")) {
         const selectedPage = parseInt(e.target.dataset.page);
-        const direction = selectedPage > currentPage ? 'left' : 'right';
+        const direction = selectedPage > currentPage ? "left" : "right";
         currentPage = selectedPage;
 
-        const { list: videos, pagination } = await fetchVideo({
+        paginated=  updatePagination({
           page: currentPage,
-          perPage,
-          category: getCategoryId(),
-        });
-        animatePageTransition(videos, direction);
-        updatePagination({
-          page: pagination.current_page,
-          totalPages: pagination.total_pages,
-          hasPrev: pagination.has_previous,
-          hasNext: pagination.has_next,
+          videos: filtered,
+          direction
         });
       }
+    });
+  
+    
+    window.addEventListener("resize", () => {
+        paginated=  updatePagination({
+          page: currentPage,
+          videos: filtered
+        });
     });
 }

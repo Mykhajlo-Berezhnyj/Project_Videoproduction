@@ -1,21 +1,19 @@
-import { setCategoryId } from '../slaider/categoryId.js';
+import { filteredList, setCategoryId } from '../slaider/categoryId.js';
 import { fetchVideo } from '../slaider/fetchVideo.js';
 import { renderVideos } from '../slaider/renderVideos.js';
 import { updatePagination } from '../slaider/updatePagination.js';
+import { getLocalList } from '../utils/getLocalList.js';
 
 export async function handleCategoryClick(categoryId) {
-  try {
-    const { list, pagination } = await fetchVideo({ category: categoryId });
+  setCategoryId(categoryId);
+  const {list} = getLocalList('videos');
+  if (!list && Array.isArray(videos)) return;
+  
 
-    setCategoryId(categoryId);
-    renderVideos(list);
-    updatePagination({
-      page: pagination.current_page,
-      totalPages: pagination.total_pages,
-      hasPrev: pagination.has_previous,
-      hasNext: pagination.has_next,
-    });
-  } catch (error) {
-    console.error('Failed to load videos:', error);
-  }
+  const filtered = filteredList(list);
+  updatePagination({
+    page: 1,
+    videos: filtered,
+  })
+
 }

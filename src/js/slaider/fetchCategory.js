@@ -1,7 +1,12 @@
 import { exampleCategories } from "../../../db/categories.js";
-import { getApi } from "../service.js";
+import { getApiList } from "../service.js";
 
 export async function fetchCategory() {
-  const { list: category } = await getApi("/video/categories/", exampleCategories);
-  return category;
+  const list  = await getApiList("/video/categories/");
+  
+  if (!list) return null;
+
+  localStorage.setItem("categories", JSON.stringify({list, timestamp: Date.now()}));
+
+  return list;
 }

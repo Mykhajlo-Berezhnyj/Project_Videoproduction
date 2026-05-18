@@ -17,7 +17,7 @@
   right: 0;
   width: 55%; 
   height: 100%;
-  background-image: url('../img/hero.jpg');
+  background-image: url('/img/hero.jpg');
   background-size: cover;
   background-position: center;
   box-shadow: inset 100px 0 100px rgba(0, 0, 0, 0.95); 
@@ -90,10 +90,10 @@
   position: absolute;
   top: -4px;
   right: 0;
-  content: '';
+  content: "";
   width: 24px;
   height: 24px;
-  background-image: url(../img/arrow.svg);
+  background-image: url(/img/arrow.svg);
   background-size: contain;
   background-repeat: no-repeat;
   transition: transform 250ms linear;
@@ -118,7 +118,7 @@
   max-width: 45%;
   width: 45%;
   height: 450px;
-  background-image: url('../img/hero.jpg');
+  background-image: url("/img/hero.jpg");
   background-size: cover;
   background-position: center;
   border-radius: 12px;
