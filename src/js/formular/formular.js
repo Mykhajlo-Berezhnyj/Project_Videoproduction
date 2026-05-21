@@ -1,58 +1,58 @@
-import { BASE_URL } from '../service.js';
+import { BASE_URL } from "../service.js";
 
 export function initFormularModal() {
-  const modal = document.getElementById('formular-modal');
-  // const closeBtn = modal?.querySelector('.close-button');
-  const form = document.getElementById('inquiry-form');
+  const modal = document.getElementById("formular-modal");
+  const closeBtn = modal?.querySelector(".close-button");
+  const form = document.getElementById("inquiry-form");
   const body = document.body;
 
-  // if (!modal || !closeBtn) return;
+  if (!modal || !closeBtn) return;
 
-  // const openModal = () => {
-  //   modal.classList.remove('modal-hidden');
-  //   requestAnimationFrame(() => {
-  //     modal.classList.add('show');
-  //     body.classList.add('show');
-  //   });
-  //   history.pushState({}, '', '#formular');
-  // };
+  const openModal = () => {
+    modal.classList.add("fixed-modal");
+     modal.classList.add("active");
+    closeBtn.classList.add("show-button");
+    body.style.overflow = "hidden";
+  };
 
-  // const closeModal = () => {
-  //   modal.classList.remove('show');
-  //   body.classList.remove('show');
-  //   setTimeout(() => modal.classList.add('modal-hidden'), 300);
-  //   history.pushState({}, '', window.location.pathname);
-  // };
+  const closeModal = () => {
+    modal.classList.remove("active");
+    setTimeout(() => {
+       modal.classList.remove("fixed-modal");
+    }, 300)
+   
+    closeBtn.classList.remove("show-button");
+    body.style.overflow = "auto";
+  };
 
-  // if (window.location.hash === '#formular') openModal();
 
-  // document.querySelectorAll('.formular-link').forEach((link) => {
-  //   link.addEventListener('click', (e) => {
-  //     e.preventDefault();
-  //     openModal();
-  //   });
-  // });
+  document.querySelectorAll('[data-action="openForm"]').forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
 
-  // closeBtn.addEventListener('click', closeModal);
+      modal.style.transformOrigin = `${x}px ${y}px`
+      e.preventDefault();
+      openModal();
+    });
+  });
 
-  // window.addEventListener('click', (e) => {
-  //   if (e.target === modal) closeModal();
-  // });
+  closeBtn.addEventListener("click", closeModal);
 
-  // window.addEventListener("popstate", () => {
-  //   if (window.location.pathname === "/formular" || window.location.pathname === "/formular/") {
-  //     openModal();
-  //   } else {
-  //     closeModal();
-  //   }
-  // });
+  window.addEventListener("click", (e) => {
+    if (e.target === closeBtn || e.target === modal) closeModal();
+  });
 
-  // window.addEventListener('popstate', () => {
-  //   window.location.hash === '#formular' ? openModal() : closeModal();
-  // });
+  window.addEventListener("keydown", (e) => {
+    if (modal.classList.contains("fixed-modal") && e.key === "Escape") {
+      closeModal();
+    }
+  });
+
 
   if (form) {
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const submitBtn = form.querySelector('button[type="submit"]');
@@ -64,25 +64,25 @@ export function initFormularModal() {
 
       try {
         const formspreeResponse = await fetch(form.action, {
-          method: 'POST',
+          method: "POST",
           body: formData,
-          headers: { Accept: 'application/json' },
+          headers: { Accept: "application/json" },
         });
 
-        if (!formspreeResponse.ok) throw new Error('Formspree error');
+        if (!formspreeResponse.ok) throw new Error("Formspree error");
 
-        alert('✅ Anfrage erfolgreich gesendet!');
+        alert("✅ Anfrage erfolgreich gesendet!");
         form.reset();
-        // closeModal();
+        closeModal();
 
         await fetch(`${BASE_URL}/inquiry/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(plainData),
         });
       } catch (error) {
-        console.error('❌ Fehler beim Senden über Formspree:', error);
-        alert('Fehler beim Senden. Bitte versuchen Sie es später erneut.');
+        console.error("❌ Fehler beim Senden über Formspree:", error);
+        alert("Fehler beim Senden. Bitte versuchen Sie es später erneut.");
       } finally {
         if (submitBtn) submitBtn.disabled = false;
       }

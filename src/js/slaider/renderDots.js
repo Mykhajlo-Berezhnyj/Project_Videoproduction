@@ -17,6 +17,8 @@ export function renderDots(currentPage, totalPages) {
     btn.className =
       page === currentPage ? "dot active formular-link" : "formular-link dot";
     btn.dataset.page = page;
+    btn.ariaLabel = `Gehen Sie zu Seite ${page}`;
+    btn.title = btn.ariaLabel;
     container.appendChild(btn);
   };
 

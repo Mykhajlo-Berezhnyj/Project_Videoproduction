@@ -3,8 +3,8 @@ export const initScrollToTop = () => {
   btnScrollUp.id = 'scrollToTop';
   btnScrollUp.className = 'scroll-to-top';
   btnScrollUp.title = 'Scroll to top';
-  btnScrollUp.setAttribute('aria-label', 'Scroll to top');
-  btnScrollUp.setAttribute('title', 'Scroll to top');
+  btnScrollUp.setAttribute('aria-label', 'Geh ganz nach oben auf die Seite');
+  btnScrollUp.setAttribute('title', 'Geh ganz nach oben auf die Seite');
 
   btnScrollUp.innerHTML = `
     <svg class="icon-scroll-to-top" >

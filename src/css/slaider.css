@@ -1,10 +1,6 @@
 .portfolio-container {
   width: 100%;
   padding: 0;
-
-  @media (min-width: 375px) {
-    padding: 0 7.5px;
-  }
 }
 
 .portfolio-subtitle {
