@@ -25,6 +25,7 @@
   transform: scale(0.9);
   transition: transform 0.1s ease;
   height: fit-content;
+  border: 2px solid wheat;
 }
 
 @media (min-width: 768px) {
@@ -47,9 +48,9 @@
     padding-top: 35px;
     padding-bottom: 10px;
     padding-inline: clamp(0px, 2vw, 30px);
-    grid-template-columns: clamp(240px, calc(50% - 15px), 500px) clamp(
+    grid-template-columns: clamp(240px, calc(50% - 20px), 500px) clamp(
         240px,
-        calc(50% - 15px),
+        calc(50% - 20px),
         500px
       );
     grid-template-rows: 1fr auto;
@@ -202,6 +203,7 @@ input:focus {
 
 .fixed-modal {
   position: fixed;
+  background: rgba(0, 0, 0, 0.769);
   inset: 0;
   z-index: 9999;
   display: flex;

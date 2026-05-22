@@ -20,52 +20,59 @@ let filtered = [];
 let paginated = [];
 
 export function getCategories() {
-  const { list: cachedCategories } =getLocalList("categories");
+  const { list: cachedCategories } = getLocalList("categories");
   return isValidList(cachedCategories) ? cachedCategories : categories;
 }
 
-export function rerenderVideos() {
-      const { list: cachedVideos } = getLocalList("videos");
-      if (!isValidList(cachedVideos)) {
-        renderVideos(exampleVideos);
-      } else {
-        filtered = filteredList(cachedVideos)
-        paginated = updatePagination({ page: currentPage, videos: filtered });
-         renderVideos(paginated);
-      }
+export function adoptionVideos() {
+  const { list: cachedVideos } = getLocalList("videos");
+  if (!isValidList(cachedVideos)) {
+    filtered = filteredList(exampleVideos);
+  } else {
+    filtered = filteredList(cachedVideos);
+  }
+  paginated = updatePagination({ page: currentPage, videos: filtered });
+  renderVideos(paginated);
 }
 
 export function initPortfolio() {
-  rerenderVideos();
+  let startX = 0;
+  let isPointer = false;
+  let cancelTimer = null;
+
+  adoptionVideos();
   startObserver({
     selector: ".portfolio-subtitle",
-    callback:  () => {
-      rerenderVideos();
+    callback: () => {
+      adoptionVideos();
     },
     classToAdd: "subtitle-visible",
   });
 
-  document
-    .getElementById("portfolio-next-btn")
-    .addEventListener("click", async () => {
-      currentPage++;
-      paginated= updatePagination({
-        page: currentPage,
-        videos: filtered,
-        direction: "left"
-      });
+  const next = () => {
+    const totalPages = Math.ceil(filtered.length / getPerPage());
+    if (currentPage >= totalPages) return;
+    currentPage++;
+    paginated = updatePagination({
+      page: currentPage,
+      videos: filtered,
+      direction: "left",
     });
+  };
 
-  document
-    .getElementById("portfolio-prev-btn")
-    .addEventListener("click", async () => {
-      currentPage--;
-      paginated= updatePagination({
-        page: currentPage,
-        videos: filtered,
-        direction: "right"
-      });
+  const prev = () => {
+    if (currentPage <= 1) return;
+    currentPage--;
+    paginated = updatePagination({
+      page: currentPage,
+      videos: filtered,
+      direction: "right",
     });
+  };
+
+  document.getElementById("portfolio-next-btn").addEventListener("click", next);
+
+  document.getElementById("portfolio-prev-btn").addEventListener("click", prev);
 
   document
     .getElementById("portfolio-dots")
@@ -75,19 +82,72 @@ export function initPortfolio() {
         const direction = selectedPage > currentPage ? "left" : "right";
         currentPage = selectedPage;
 
-        paginated=  updatePagination({
+        paginated = updatePagination({
           page: currentPage,
           videos: filtered,
-          direction
+          direction,
         });
       }
     });
-  
-    
-    window.addEventListener("resize", () => {
-        paginated=  updatePagination({
-          page: currentPage,
-          videos: filtered
-        });
+
+  const slaider = document.getElementById("videos");
+
+  slaider.addEventListener("pointerdown", (e) => {
+    startX = e.clientX;
+    isPointer = true;
+    e.preventDefault();
+
+    cancelTimer = setTimeout(() => {
+      startX = 0;
+      isPointer = false;
+    }, 500);
+  });
+
+  slaider.addEventListener("pointerup", (e) => {
+    clearTimeout(cancelTimer);
+
+    if (!isPointer) return;
+    isPointer = false;
+
+    const rect = slaider.getBoundingClientRect();
+    const isSlaider =
+      e.pointerType === "mouse"
+        ? slaider.contains(e.target)
+        : e.clientX >= rect.left &&
+          e.clientX <= rect.right &&
+          e.clientY >= rect.top &&
+          e.clientY <= rect.bottom;
+
+    if (!isSlaider) {
+      startX = 0;
+      return;
+    }
+
+    const step = e.clientX - startX;
+    startX = 0;
+
+    if (step > 50) {
+      prev();
+    } else if (step < -50) {
+      next();
+    }
+  });
+
+  slaider.addEventListener("pointermove", (e) => {
+    if (!isPointer) return;
+    e.preventDefault();
+  });
+
+  slaider.addEventListener("pointercancel", () => {
+    clearTimeout(cancelTimer);
+    isPointer = false;
+    startX = 0;
+  });
+
+  window.addEventListener("resize", () => {
+    paginated = updatePagination({
+      page: currentPage,
+      videos: filtered,
     });
+  });
 }

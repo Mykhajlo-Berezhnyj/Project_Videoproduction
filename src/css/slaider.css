@@ -109,6 +109,7 @@
   gap: 34px;
   width: 280px;
   height: 541px;
+  touch-action: pan-y;
 
   @media (min-width: 768px) {
     width: 594px;
